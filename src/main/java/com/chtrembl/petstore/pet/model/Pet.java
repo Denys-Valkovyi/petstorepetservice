@@ -4,9 +4,24 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Convert;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
+import javax.persistence.Table;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 
+import com.chtrembl.petstore.pet.converter.StatusConverter;
 import org.springframework.validation.annotation.Validated;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
@@ -20,12 +35,16 @@ import io.swagger.annotations.ApiModelProperty;
  */
 @Validated
 @javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2021-12-20T15:31:39.272-05:00")
-
+@Entity
+@Table(name = "pet")
 public class Pet {
 	@JsonProperty("id")
+	@Id
 	private Long id;
 
 	@JsonProperty("category")
+	@OneToOne(cascade = CascadeType.ALL)
+	@JoinColumn(name = "category_id", referencedColumnName = "id")
 	private Category category;
 
 	@JsonProperty("name")
@@ -37,6 +56,12 @@ public class Pet {
 
 	@JsonProperty("tags")
 	@Valid
+	@JoinTable(name = "pet_tag",
+			joinColumns =
+					{ @JoinColumn(name = "pet_id", referencedColumnName = "id") },
+			inverseJoinColumns =
+					{ @JoinColumn(name = "tag_id", referencedColumnName = "id") })
+	@OneToMany
 	private List<Tag> tags = null;
 
 	/**
@@ -77,6 +102,7 @@ public class Pet {
 	}
 
 	@JsonProperty("status")
+	@Convert(converter = StatusConverter.class)
 	private StatusEnum status;
 
 	public Pet id(Long id) {
