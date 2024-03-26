@@ -16,8 +16,6 @@ spring:
   mvc:
     pathmatch:
       matching-strategy: ant_path_matcher
-  #datasource:
-    #url: ${AZURE_SQL_JDBC_CONNECTION_STRING}
   jpa:
     hibernate:
       ddl-auto: none
