@@ -35,7 +35,6 @@ public class DataSourceConfig {
                 .credential(new DefaultAzureCredentialBuilder().build())
                 .buildClient();
         KeyVaultSecret retrievedSecret = secretClient.getSecret(connectionStringSecretName);
-        log.info("Retrieved connection string from keyVault: {}", retrievedSecret.getValue());
 
         DataSourceBuilder dataSourceBuilder = DataSourceBuilder.create();
         dataSourceBuilder.url(retrievedSecret.getValue());
